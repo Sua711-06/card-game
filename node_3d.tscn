@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://dpo80o151pt8f"]
+
+[ext_resource type="PackedScene" uid="uid://jioisksj3bks" path="res://Assets/Scenes/card.tscn" id="1_hkcib"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uvu3x"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_gjons"]
+sky_material = SubResource("ProceduralSkyMaterial_uvu3x")
+
+[sub_resource type="Environment" id="Environment_tiwd8"]
+background_mode = 2
+sky = SubResource("Sky_gjons")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1kaw4"]
+albedo_color = Color(0.0934055, 0.224789, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_li4dl"]
+material = SubResource("StandardMaterial3D_1kaw4")
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_altta"]
+size = Vector3(10, 0.15, 10)
+
+[sub_resource type="Animation" id="Animation_gk5gf"]
+resource_name = "new_animation"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Card:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 6.28319, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 2)
+}
+
+[sub_resource type="Animation" id="Animation_muuxw"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Card:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qgmug"]
+_data = {
+"RESET": SubResource("Animation_muuxw"),
+"new_animation": SubResource("Animation_gk5gf")
+}
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.797668, 0.603097, 0, -0.603097, 0.797668, 0, 0.791726, 0.395939)
+size = 3.857
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tiwd8")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.00234, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_li4dl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_altta")
+
+[node name="Card" parent="." instance=ExtResource("1_hkcib")]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0.5, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qgmug")
+}
